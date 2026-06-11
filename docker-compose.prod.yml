@@ -45,7 +45,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-bustrack123}
       - JWT_SECRET=${JWT_SECRET}
       - MOCK_BLOCKCHAIN=${MOCK_BLOCKCHAIN:-false}
-      - MUMBAI_RPC_URL=${MUMBAI_RPC_URL:-https://rpc-mumbai.maticvigil.com}
+      - AMOY_RPC_URL=${AMOY_RPC_URL:-https://rpc-amoy.polygon.technology}
       - WALLET_PRIVATE_KEY=${WALLET_PRIVATE_KEY:-}
       - CONTRACT_ADDRESS=${CONTRACT_ADDRESS:-}
       - GAS_LIMIT=${GAS_LIMIT:-200000}

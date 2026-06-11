@@ -29,13 +29,13 @@ export class BlockchainServiceImpl extends BlockchainService {
 
   private getContract(): ethers.Contract {
     if (!this._contract) {
-      const rpcUrl = this.config.get<string>('MUMBAI_RPC_URL');
+      const rpcUrl = this.config.get<string>('AMOY_RPC_URL');
       const privateKey = this.config.get<string>('WALLET_PRIVATE_KEY');
       const contractAddress = this.config.get<string>('CONTRACT_ADDRESS');
 
       if (!rpcUrl || !privateKey || !contractAddress) {
         throw new Error(
-          'Faltan variables de entorno para blockchain: MUMBAI_RPC_URL, WALLET_PRIVATE_KEY, CONTRACT_ADDRESS',
+          'Faltan variables de entorno para blockchain: AMOY_RPC_URL, WALLET_PRIVATE_KEY, CONTRACT_ADDRESS',
         );
       }
 
@@ -93,7 +93,7 @@ export class BlockchainServiceImpl extends BlockchainService {
         numeroFactura: request.numeroFactura,
         hashSha256: request.hashSha256,
         monto: request.monto,
-        network: 'mumbai',
+        network: 'amoy',
         estado: 'PENDIENTE',
       });
       registro = await this.repository.save(registro);

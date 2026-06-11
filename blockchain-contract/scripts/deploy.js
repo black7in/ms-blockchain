@@ -13,6 +13,9 @@ async function main() {
   console.log("");
   console.log("Guarda esta direccion y agregala a CONTRACT_ADDRESS en .env de ms-blockchain:");
   console.log("CONTRACT_ADDRESS=" + direccion);
+  console.log("");
+  console.log("Verificar en explorador:");
+  console.log("https://amoy.polygonscan.com/address/" + direccion);
 }
 
 main().catch((error) => {

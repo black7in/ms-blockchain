@@ -33,7 +33,7 @@ export class RegistroBlockchainResponse {
     response.errorMensaje = entity.errorMensaje;
 
     if (entity.txHash && entity.network !== 'mock') {
-      response.urlExplorador = `https://mumbai.polygonscan.com/tx/${entity.txHash}`;
+      response.urlExplorador = `https://amoy.polygonscan.com/tx/${entity.txHash}`;
     } else {
       response.urlExplorador = null;
     }
