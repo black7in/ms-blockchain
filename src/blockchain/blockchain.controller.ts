@@ -14,6 +14,7 @@ import { VerificarFacturaResponse } from './dto/verificar-factura-response.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller('blockchain/facturas')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -50,7 +51,7 @@ export class BlockchainController {
   }
 
   @Get(':hash')
-  @Roles('ADMIN', 'SUPERVISOR')
+  @Public()
   async verificar(
     @Param('hash') hash: string,
   ): Promise<VerificarFacturaResponse> {
