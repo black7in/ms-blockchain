@@ -1,0 +1,65 @@
+services:
+  # ============================================
+  # PostgreSQL
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: bustrack_blockchain_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-bustrack_blockchain}
+      POSTGRES_USER: ${DB_USER:-bustrack}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bustrack123}
+    volumes:
+      - pgdata_blockchain:/var/lib/postgresql/data
+    networks:
+      - blockchain-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bustrack} -d ${DB_NAME:-bustrack_blockchain}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ============================================
+  # ms-blockchain API (imagen produccion)
+  # ============================================
+  api:
+    build:
+      context: .
+      target: production
+      cache_from:
+        - type=registry,ref=ms-blockchain:buildcache
+    image: ${DOCKER_REGISTRY:-ms-blockchain}:${IMAGE_TAG:-latest}
+    container_name: ms-blockchain-api
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-3001}:3001"
+    environment:
+      - SERVER_PORT=3001
+      - NODE_ENV=production
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-bustrack_blockchain}
+      - DB_USER=${DB_USER:-bustrack}
+      - DB_PASSWORD=${DB_PASSWORD:-bustrack123}
+      - JWT_SECRET=${JWT_SECRET}
+      - MOCK_BLOCKCHAIN=${MOCK_BLOCKCHAIN:-false}
+      - MUMBAI_RPC_URL=${MUMBAI_RPC_URL:-https://rpc-mumbai.maticvigil.com}
+      - WALLET_PRIVATE_KEY=${WALLET_PRIVATE_KEY:-}
+      - CONTRACT_ADDRESS=${CONTRACT_ADDRESS:-}
+      - GAS_LIMIT=${GAS_LIMIT:-200000}
+      - GAS_PRICE_GWEI=${GAS_PRICE_GWEI:-30}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - blockchain-net
+
+networks:
+  blockchain-net:
+    driver: bridge
+
+volumes:
+  pgdata_blockchain:
+    name: bustrack_blockchain_pgdata

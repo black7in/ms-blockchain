@@ -1,0 +1,70 @@
+services:
+  # ============================================
+  # PostgreSQL
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: bustrack_blockchain_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-bustrack_blockchain}
+      POSTGRES_USER: ${DB_USER:-bustrack}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bustrack123}
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata_blockchain:/var/lib/postgresql/data
+    networks:
+      - blockchain-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-bustrack} -d ${DB_NAME:-bustrack_blockchain}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # ============================================
+  # ms-blockchain API (desarrollo con hot reload)
+  # ============================================
+  api:
+    build:
+      context: .
+      target: development
+      cache_from:
+        - type=gha,scope=buildkit-ms-blockchain
+        - type=registry,ref=ms-blockchain:buildcache
+      cache_to:
+        - type=gha,scope=buildkit-ms-blockchain,mode=max
+    container_name: ms-blockchain-api
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-3001}:3001"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - NODE_ENV=development
+    volumes:
+      # Montar codigo fuente para hot reload
+      - ./src:/app/src:delegated
+      # Excluir node_modules del binding (usar el del contenedor)
+      - /app/node_modules
+      # NestJS CLI config (opcional)
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./tsconfig.build.json:/app/tsconfig.build.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - blockchain-net
+    stdin_open: true
+    tty: true
+
+networks:
+  blockchain-net:
+    driver: bridge
+
+volumes:
+  pgdata_blockchain:
+    name: bustrack_blockchain_pgdata

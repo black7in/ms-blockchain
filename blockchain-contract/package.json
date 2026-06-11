@@ -1,0 +1,11 @@
+{
+  "name": "bustrack-blockchain-contract",
+  "version": "1.0.0",
+  "description": "Smart contract FacturaRegistry para BusTrack - Polygon Mumbai",
+  "private": true,
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.0"
+  }
+}

@@ -1,0 +1,49 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build
+dist/
+*.tsbuildinfo
+
+# Tests
+coverage/
+.jest-cache/
+test/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env (se inyecta en runtime)
+.env
+.env.local
+.env.*.local
+
+# Docker (no incluir en build context)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Blockchain contract (se compila dentro del contenedor)
+blockchain-contract/node_modules/
+blockchain-contract/artifacts/
+blockchain-contract/cache/
+
+# Misc
+*.md
+docs/
