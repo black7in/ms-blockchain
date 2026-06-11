@@ -162,7 +162,7 @@ export class BlockchainServiceImpl extends BlockchainService {
           fechaRegistro:
             registro.createdAt?.toISOString() || new Date().toISOString(),
           urlExplorador: registro.txHash
-            ? `https://mumbai.polygonscan.com/tx/${registro.txHash}`
+            ? `https://amoy.polygonscan.com/tx/${registro.txHash}`
             : null,
         },
       };
